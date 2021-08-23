@@ -23,13 +23,12 @@ public class StudentServiceImpl implements StudentService {
 		return repo.findAll();
 	}
 	@Override
-	public String updateStudent(Integer id,Student student) {
+	public Student updateStudent(Integer id,Student student) {
 		Optional<Student> existingStudent=repo.findById(id);
 		if(existingStudent.isPresent()) {
 			existingStudent.get().setName(student.getName());
 			existingStudent.get().setPer(student.getPer());
-			repo.save(existingStudent.get());
-			return "Record updated";
+			return repo.save(existingStudent.get());
 			}
 		else
 			throw new StudentNotFoudException("student not present");
