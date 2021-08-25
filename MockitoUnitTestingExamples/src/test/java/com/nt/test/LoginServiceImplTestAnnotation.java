@@ -1,26 +1,25 @@
 package com.nt.test;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.nt.dao.ILoginDao;
-import com.nt.service.ILoginService;
 import com.nt.service.LoginServiceImpl;
 
-public class LoginServiceImplTest {
-	private static ILoginService service;
-	private static ILoginDao daoMock;
-	@BeforeAll
-	public static void setUpOnce() {
-		// for creating mock or dummy oject
-		daoMock=Mockito.mock(ILoginDao.class);// mock method will create in memory class implementing IloginDao interface having null method defication having authenticate(-,-)  method
-		//crate service class object
-		
-		service=new LoginServiceImpl(daoMock);
+public class LoginServiceImplTestAnnotation {
+	@InjectMocks
+	private LoginServiceImpl service;
+	@Mock
+	private ILoginDao daoMock;
+	public LoginServiceImplTestAnnotation() {
+		MockitoAnnotations.openMocks(this);
 	}
+	
+	
 	@Test
 	public void loginWithValidCredentials() {
 		// provding stub functionality   for dao aunthenticate method
@@ -40,11 +39,5 @@ public class LoginServiceImplTest {
 	Assertions.assertThrows(IllegalArgumentException.class,()->service.Login("",""));
 	}
 	
-	@AfterAll
-	public static void clearAll() {
-		service=null;
-		daoMock=null;
-	}
-	
-	
+
 }

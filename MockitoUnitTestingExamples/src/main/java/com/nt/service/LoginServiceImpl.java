@@ -17,7 +17,16 @@ public class LoginServiceImpl implements ILoginService {
 			return false;
 		else 
 			return true;
-
-	
 	}
+/*@Override
+	public String registerUser(String user, String role) {
+		if(!role.equalsIgnoreCase("")&&!role.equalsIgnoreCase("visitors")) {
+			loginDao.addUser(user, role);
+			return "User Register";
+		}
+		else {
+			return "user not regiter";
+		}
+	
+	}*/
 }
