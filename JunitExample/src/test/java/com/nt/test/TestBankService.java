@@ -2,21 +2,29 @@ package com.nt.test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
+
 import java.time.Duration;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import com.nt.service.BankService;
-
+//@TestMethodOrder(OrderAnnotation.class)  // for specifying the order of TestMethod use @Order() at top of each method
+//@TestMethodOrder(MethodName.class) // order is decided by mehtod names
+@TestMethodOrder(MethodOrderer.DisplayName.class)// order is decided by mehtod names MethodOrder.DisplayName.class to avoid the  conflicts
 public class TestBankService {
 private static BankService bankService;
 
 	@BeforeAll
+
 	/* @BeforeAll method must be static */
 	public static void initalSetup() {
 		bankService = new BankService();
@@ -30,6 +38,9 @@ private static BankService bankService;
 	
 	}*/
 	@Test
+	@DisplayName("Method for checking Bignumber")
+	@Order(2)
+	@Tag("UAT")
 	public void testcalcSimpleInterestAmountWithBigNumber() {
 		System.out.println("TestBankService.testcalcSimpleInterestAmountWithBigNumber()");
 		float expected=9000.0f;
@@ -44,6 +55,9 @@ private static BankService bankService;
 		
 	}
 	@Test
+	@DisplayName("Method for checking smallNumber")
+	@Order(1)
+	@Tag("UAT")
 	public void testcalcSimpleInterestAmountWithSmallNumber() {
 		System.out.println("TestBankService.testcalcSimpleInterestAmountWithSmallNumber()");
 		float actual=bankService.calcSimpleInterestAmount(150000,3 ,2);
@@ -55,6 +69,10 @@ private static BankService bankService;
 		 * our method in varoius angle */
 	}
 	@Test
+	@Order(-1)
+	@DisplayName("Method for checking Invalid argument")
+	@Tag("DEV")
+	@Tag("UAT")  // here tag is repeatable annotation so this mehtod we can use in both environement
 	public void testcalcSimpleInterestAmountWithInvalidArgument() {
 		assertThrows(IllegalArgumentException.class,()-> bankService.calcSimpleInterestAmount(0, 0, 0));
 		
@@ -70,6 +88,9 @@ private static BankService bankService;
 	}
 
 	@Test
+	@Disabled
+	@Order(5)
+	@Tag("DEV")
 	public void testcalcSimpleInterestAmountWithDuration() {
 		assertTimeout(Duration.ofMillis(25000), ()->bankService.calcSimpleInterestAmount(23454,2,3));
 	}
