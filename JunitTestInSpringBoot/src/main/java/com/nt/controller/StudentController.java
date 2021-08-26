@@ -25,6 +25,7 @@ public class StudentController {
 		Student savedStudent=service.saveStudent(student);
 		if(savedStudent==null)
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		
 		return new ResponseEntity<Student>( savedStudent,HttpStatus.CREATED);
 	}
 	@GetMapping("/students")
@@ -35,8 +36,18 @@ public class StudentController {
 		else
 			return ResponseEntity.of(Optional.of(listStudents));
 	}
+	@GetMapping("/student/{id}")
+	public ResponseEntity<Student> getStudent(@PathVariable Integer id){
+		Student student=service.getStudentById(id);
+		if(student!=null)
+			return new ResponseEntity<Student>(student,HttpStatus.FOUND);
+		else
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	}
+	
 	@PutMapping("/student/{id}")
 	public ResponseEntity<Student> updateStudentById(@PathVariable Integer id,@RequestBody Student student) {
+		System.out.println("StudentController.updateStudentById()");
 		try{
 			Student updatedStudent = service.updateStudent(id, student);
 			return ResponseEntity.status(HttpStatus.OK).body(updatedStudent);

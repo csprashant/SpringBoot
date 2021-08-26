@@ -9,4 +9,5 @@ public interface StudentService {
 	public List<Student> getAllStudent();
 	public Student updateStudent(Integer id,Student student);
 	public String deleteStudent(Integer id);
+	public Student getStudentById(Integer id);
 }

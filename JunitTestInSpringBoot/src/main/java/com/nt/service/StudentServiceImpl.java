@@ -24,11 +24,12 @@ public class StudentServiceImpl implements StudentService {
 	}
 	@Override
 	public Student updateStudent(Integer id,Student student) {
-		Optional<Student> existingStudent=repo.findById(id);
-		if(existingStudent.isPresent()) {
-			existingStudent.get().setName(student.getName());
-			existingStudent.get().setPer(student.getPer());
-			return repo.save(existingStudent.get());
+		Student existingStudent=getStudentById(id);
+		if(existingStudent!=null) {
+			System.out.println("StudentServiceImpl.updateStudent()");
+			existingStudent.setName(student.getName());
+			existingStudent.setPer(student.getPer());
+			return repo.save(existingStudent);
 			}
 		else
 			throw new StudentNotFoudException("student not present");
@@ -43,5 +44,16 @@ public class StudentServiceImpl implements StudentService {
 		else 
 			throw new StudentNotFoudException("Student not found");
 	}
+	@Override
+	public Student getStudentById(Integer id) {
+	
+		Optional<Student> student = repo.findById(id);
+		if(student.isEmpty())
+			throw new StudentNotFoudException("Student not found");
+			
+		else {System.out.println("Foound");
+			return student.get();
+			
+	}}
 	
 }

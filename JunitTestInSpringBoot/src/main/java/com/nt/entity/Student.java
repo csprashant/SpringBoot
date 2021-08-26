@@ -42,6 +42,11 @@ public class Student {
 	public void setPer(float per) {
 		this.per = per;
 	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", name=" + name + ", per=" + per + "]";
+	}
 	
 
 }
