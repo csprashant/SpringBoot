@@ -19,7 +19,6 @@ public class LoginServiceImplTestAnnotation {
 		MockitoAnnotations.openMocks(this);
 	}
 	
-	
 	@Test
 	public void loginWithValidCredentials() {
 		// provding stub functionality   for dao aunthenticate method
@@ -39,5 +38,4 @@ public class LoginServiceImplTestAnnotation {
 	Assertions.assertThrows(IllegalArgumentException.class,()->service.Login("",""));
 	}
 	
-
 }
