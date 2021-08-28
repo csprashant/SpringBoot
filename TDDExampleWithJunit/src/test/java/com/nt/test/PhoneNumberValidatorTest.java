@@ -39,5 +39,4 @@ public class PhoneNumberValidatorTest {
 	public void clear() {
 		phone=null;
 	}
-
 }
