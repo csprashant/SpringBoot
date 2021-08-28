@@ -24,9 +24,10 @@ public class StudentServiceImpl implements StudentService {
 	}
 	@Override
 	public Student updateStudent(Integer id,Student student) {
+		
 		Student existingStudent=getStudentById(id);
 		if(existingStudent!=null) {
-			System.out.println("StudentServiceImpl.updateStudent()");
+			
 			existingStudent.setName(student.getName());
 			existingStudent.setPer(student.getPer());
 			return repo.save(existingStudent);

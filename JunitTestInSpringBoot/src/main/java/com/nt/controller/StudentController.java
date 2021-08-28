@@ -50,6 +50,7 @@ public class StudentController {
 		System.out.println("StudentController.updateStudentById()");
 		try{
 			Student updatedStudent = service.updateStudent(id, student);
+			System.out.println("done");
 			return ResponseEntity.status(HttpStatus.OK).body(updatedStudent);
 			}
 		catch(Exception e) {

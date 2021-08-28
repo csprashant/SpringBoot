@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nt.entity.Student;
+import com.nt.repo.StudentRepo;
 import com.nt.service.StudentServiceImpl;
 
 @WebMvcTest(StudentController.class)
@@ -31,6 +32,8 @@ public class TestStudentController {
 	private MockMvc mockMvc;
 	@MockBean
 	private StudentServiceImpl service;
+	@MockBean
+	private StudentRepo repo;
 	@Test
 	public void testSaveRecord() throws Exception {
 		Student student = new Student(1,"Raj",85.25f);
@@ -53,40 +56,49 @@ public class TestStudentController {
 		Student student2 = new Student(2,"Rahul",75.25f);
 		Student student3= new Student(3,"Shri",95.25f);
 		List<Student> studentList=List.of(student1,student2,student3);
+		
 		String inputInJson=this.mapToJson(studentList);
 		Mockito.when(service.getAllStudent()).thenReturn(studentList);
+		
 		RequestBuilder builder=MockMvcRequestBuilders.get("/students").
 								accept(MediaType.APPLICATION_JSON).content(inputInJson)
 								.contentType(MediaType.APPLICATION_JSON);
+	
 		MvcResult result=mockMvc.perform(builder).andReturn();
+		
 		MockHttpServletResponse response=result.getResponse();
+		
 		String outputInJson=response.getContentAsString();
 		assertThat(outputInJson).isEqualTo(inputInJson);
 		assertEquals(HttpStatus.OK.value(),response.getStatus());	
 	}
-	/*
+	
 	@Test
 	public void testUpdateStudentById() throws Exception{
 		Student student1 = new Student(1,"Raj",85.25f);
 		System.out.println("Going to getStudentByIdMethod");
 		Mockito.when(service.getStudentById(1)).thenReturn(student1);
+		System.out.println("Student Retrived");
 		student1.setName("Shiva soni");
-		System.out.println("Going to updateStudent()");
+		
 		Mockito.when(service.updateStudent(1, student1)).thenReturn(student1);
+		System.out.println("Student updated");
 		String inputInJson=this.mapToJson(student1);
 				
 		RequestBuilder builder=MockMvcRequestBuilders.put("/student/1").
 				accept(MediaType.APPLICATION_JSON).content(inputInJson)
 				.contentType(MediaType.APPLICATION_JSON);
-		System.out.println();
+		System.out.println("Request builder created");
 		MvcResult result=mockMvc.perform(builder).andReturn();
+		System.out.println("Result generated");
 		MockHttpServletResponse response=result.getResponse();
+		System.out.println("response generated");
 		String outputInJson=response.getContentAsString();
 		assertThat(outputInJson).isEqualTo(inputInJson);
 		assertEquals(HttpStatus.OK.value(),response.getStatus());	
 	
 	}
-	@Test
+	/*@Test
 	public void testDeleteStudent() throws Exception
 	{
 		Student student1 = new Student(1,"Raj",85.25f);
