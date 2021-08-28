@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import com.nt.java.PhoneNumberValidator;
 
+
 public class PhoneNumberValidatorTest {
 	
 	private PhoneNumberValidator phone;
 	@BeforeEach
 	public void setUp() {
 		phone=new PhoneNumberValidator();
-		
 	}
 	@Test
 	public void testForValidPhoneNumber() {
