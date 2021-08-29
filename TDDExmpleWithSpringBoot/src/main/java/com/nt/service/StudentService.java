@@ -11,6 +11,16 @@ public class StudentService {
 		
 		return null;
 	}
+
+	public Student saveOrUpdate(Object any) {
+		
+		return null;
+	}
+
+	public Student getStudentDetailsById(Integer i) {
+		
+		return null;
+	}
 	
 	
 
