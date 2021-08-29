@@ -4,6 +4,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -75,6 +77,31 @@ public class StudentControllerTest {
 	                .andExpect(jsonPath("$").isMap())
 	                .andDo(print());
 	    }
+	
+	@Test
+	public void getAllStudentTest() throws Exception {
+			List <Student> listStudent=List.of(new Student(1,"Raj",96.36),
+											   new Student(2,"Ramesh",97.36),
+											   new Student(3,"Shubash",86.36),
+											   new Student(4,"Kuldeep",66.36));
+			BDDMockito.given(studentService.getAllRecord()).willReturn(listStudent);
+			mockMvc.perform(MockMvcRequestBuilders.get("/students/"))
+							.andExpect(status().isOk())
+							.andExpect(jsonPath("$").isArray())
+							.andDo(print());
+		
+	}
+	@Test
+	public void deleteStudentByIdTest() throws Exception{
+		BDDMockito.given(studentService.deleteStudentById(Mockito.anyInt())).willReturn("Success");
+		mockMvc.perform(MockMvcRequestBuilders.delete("/students/1")
+						.contentType(MediaType.APPLICATION_JSON))
+						.andExpect(status().isOk())
+						.andDo(print())
+						;
+						
+		
+	}
 }
 
 

@@ -1,5 +1,8 @@
 package com.nt.service;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.nt.model.Student;
@@ -18,6 +21,16 @@ public class StudentService {
 	}
 
 	public Student getStudentDetailsById(Integer i) {
+		
+		return null;
+	}
+
+	public List<Student> getAllRecord() {
+		
+		return null;
+	}
+
+	public String deleteStudentById(int id) {
 		
 		return null;
 	}

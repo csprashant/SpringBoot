@@ -1,10 +1,12 @@
 package com.nt.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +32,19 @@ public class StudentController {
 	public ResponseEntity<Student> getStudentDetailsById(@RequestParam Integer id) throws Exception{
 		return new ResponseEntity<>(studentService.getStudentDetailsById(id),HttpStatus.OK);
 	}
+	@GetMapping("/")
+	public ResponseEntity<List<Student>> getAllStudents(){
+		return new ResponseEntity<List<Student>>(studentService.getAllRecord(),HttpStatus.OK);
+	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Student> updateStudent(@PathVariable Integer id,  @RequestBody Student student){
 		return new ResponseEntity<Student>(studentService.saveOrUpdate(student),HttpStatus.CREATED);
+	}
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteStudentById(@PathVariable Integer id)
+	{
+		return  new ResponseEntity<String>(studentService.deleteStudentById(id),HttpStatus.OK);
 	}
 	
 }
