@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import com.nt.repo.StudentRepo;
 import com.nt.service.StudentServiceImpl;
 
 @WebMvcTest(StudentController.class)
+//@SpringBootTest
 public class TestStudentController {
 	@Autowired
 	private MockMvc mockMvc;
