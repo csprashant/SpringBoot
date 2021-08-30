@@ -28,7 +28,7 @@ import com.nt.repo.StudentRepo;
 import com.nt.service.StudentServiceImpl;
 
 @WebMvcTest(StudentController.class)
-//@SpringBootTest
+@SpringBootTest
 public class TestStudentController {
 	@Autowired
 	private MockMvc mockMvc;

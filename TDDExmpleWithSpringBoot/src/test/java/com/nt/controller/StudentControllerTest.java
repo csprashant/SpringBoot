@@ -1,5 +1,6 @@
 package com.nt.controller;
 
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,7 +35,7 @@ public class StudentControllerTest {
 	
 	@Test
 	public void  getStudentDetailsTest() throws Exception{
-		BDDMockito.given(studentService.getStudentDetails(Mockito.anyString())).willReturn(new Student(1,"Raj",95.24));
+		BDDMockito.given(studentService.getStudentDetailsByName(Mockito.anyString())).willReturn(new Student(1,"Raj",95.24));
 		mockMvc.perform(MockMvcRequestBuilders.get("/students/Raj"))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$").isMap())
@@ -55,25 +56,39 @@ public class StudentControllerTest {
 		.andExpect(jsonPath("name").value("Raj"))
 		.andExpect(jsonPath("per").value(95.24));
 		
+		
 	}
 	
 	@Test
 	public void  StudentNotFoundHttpStatus() throws Exception{
-		BDDMockito.given(studentService.getStudentDetails(Mockito.anyString())).willThrow(new StudntNotFoundException());
+		BDDMockito.given(studentService.getStudentDetailsByName(Mockito.anyString())).willThrow(new StudntNotFoundException());
 		mockMvc.perform(MockMvcRequestBuilders.get("/students/Raj"))
 		.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void testSaveStduent() throws Exception{
+		Student student=new Student(1,"sunil",85.25);
+		BDDMockito.given(studentService.saveStudent(Mockito.any())).willReturn(student);
+		mockMvc.perform(MockMvcRequestBuilders.post("/students/")
+				.content(new ObjectMapper().writeValueAsString(student))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$").isMap())
+                .andDo(print());
 	}
 	@Test
 	public void updateStudentTest() throws Exception{
 		 Student student = new Student(1, "Raj",96.36);
 		 student.setName("Raj sinha");
-		 BDDMockito.given(studentService.saveOrUpdate(Mockito.any())).willReturn(student);
+		 BDDMockito.given(studentService.updateStudent(Mockito.anyInt())).willReturn(student);
 
 	        mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
 	                .content(new ObjectMapper().writeValueAsString(new Student(1, "Raj",96.36)))
 	                .contentType(MediaType.APPLICATION_JSON)
 	                .accept(MediaType.APPLICATION_JSON))
-	                .andExpect(status().isCreated())
+	                .andExpect(status().isOk())
 	                .andExpect(jsonPath("$").isMap())
 	                .andDo(print());
 	    }
