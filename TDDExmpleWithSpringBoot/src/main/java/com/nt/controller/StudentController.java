@@ -40,7 +40,7 @@ public class StudentController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Student> updateStudent(@PathVariable Integer id,  @RequestBody Student student){
-		return new ResponseEntity<Student>(studentService.updateStudent(id),HttpStatus.OK);
+		return new ResponseEntity<Student>(studentService.updateStudent(id,student),HttpStatus.OK);
 	}
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteStudentById(@PathVariable Integer id)
