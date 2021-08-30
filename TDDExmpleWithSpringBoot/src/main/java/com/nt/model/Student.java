@@ -1,8 +1,18 @@
 package com.nt.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="STUDENT")
 public class Student {
+	@Id
 	private Integer Id;
+	@Column
 	private String name;
+	@Column
 	private Double per;
 	public Student() {
 	}
