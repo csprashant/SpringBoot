@@ -34,7 +34,7 @@ public class TestStudentServiceImpl{
 		Student student1 = new Student(1,"Raj",85.25f);
 		Student student2 = new Student(2,"Rahul",65.25f);
 		Student student3 = new Student(3,"Suman",55.25f);
-		List studdentList=List.of(student1,student2,student3);
+		List<Student> studdentList=List.of(student1,student2,student3);
 		Mockito.when(repo.findAll()).thenReturn(studdentList);
 		assertThat(service.getAllStudent()).isEqualTo(studdentList);
 	}
