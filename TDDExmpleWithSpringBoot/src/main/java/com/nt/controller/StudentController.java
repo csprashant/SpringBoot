@@ -24,13 +24,9 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 	
-	@GetMapping("/{name}")
-	public ResponseEntity<Student> getStudentDetails(@PathVariable String name) throws Exception{
-		return new ResponseEntity<>(studentService.getStudentDetailsByName(name),HttpStatus.OK);
-	}
 	
-	@GetMapping("/id")
-	public ResponseEntity<Student> getStudentDetailsById(@RequestParam Integer id) throws Exception{
+	@GetMapping("/{id}")
+	public ResponseEntity<Student> getStudentDetailsById(@PathVariable Integer id) throws Exception{
 		return new ResponseEntity<>(studentService.getStudentDetailsById(id),HttpStatus.OK);
 	}
 	@GetMapping("/")

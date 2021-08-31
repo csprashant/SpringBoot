@@ -39,22 +39,14 @@ public class StudentControllerTest {
 		student=new Student(1,"Raj",95.24);	
 	}
 	
-	@Test
-	public void  getStudentDetailsTest() throws Exception{
-		BDDMockito.given(studentService.getStudentDetailsByName(Mockito.anyString())).willReturn(new Student(1,"Raj",95.24));
-		mockMvc.perform(MockMvcRequestBuilders.get("/students/Raj"))
-						.andExpect(status().isOk())
-						.andExpect(jsonPath("$").isMap())
-						.andExpect(jsonPath("name").value("Raj"))
-						.andExpect(jsonPath("per").value(95.24));
-	}
 	
 	@Test
 	public void getStudentDetailsByIDTest() throws Exception{
 		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willReturn(student);
-		mockMvc.perform(MockMvcRequestBuilders.get("/students/id").param("id", "1"))
+		//mockMvc.perform(MockMvcRequestBuilders.get("/students/id").param("id", "1"))
 		// why param becuase all request mapping in controler class  ("students/{id}") are similer so it confunsed to pick which handler mehtod it should pick so
 		//we have go for @RequestParam in the controller class mehtod 
+		mockMvc.perform(MockMvcRequestBuilders.get("/students/1"))
 						.andExpect(status().isOk())
 						.andExpect(jsonPath("$").isMap())
 						.andExpect(jsonPath("name").value("Raj"))
@@ -63,8 +55,8 @@ public class StudentControllerTest {
 	
 	@Test
 	public void  StudentNotFoundHttpStatus() throws Exception{
-		BDDMockito.given(studentService.getStudentDetailsByName(Mockito.anyString())).willThrow(new StudntNotFoundException());
-		mockMvc.perform(MockMvcRequestBuilders.get("/students/Raj"))
+		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willThrow(new StudntNotFoundException());
+		mockMvc.perform(MockMvcRequestBuilders.get("/students/12"))
 		.andExpect(status().isNotFound());
 	}
 	

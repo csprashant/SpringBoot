@@ -22,18 +22,12 @@ public class TestStudentRepo {
 	@Test
 	public  void testSaveStduent() {
 		Student saveStudent = repo.save(new Student(120,"opop",96.36));
-        Optional<Student> returnstudent = Optional.of(repo.findByName("opop"));
+        Optional<Student> returnstudent = repo.findById(120);
         assertTrue(returnstudent.isPresent());
         assertEquals(saveStudent,returnstudent.get());
 	}
 	
-	@Test
-	public  void testFindByName() {
-        Optional<Student> returnstudent = Optional.of(repo.findByName("Raj"));
-        assertTrue(returnstudent.isPresent());
-        
-	}
-	
+
 	@Test
 	public void testGetAllStudent() {
 		List<Student> listStudent=repo.findAll();
@@ -46,20 +40,15 @@ public class TestStudentRepo {
 		 Optional<Student> toBeDeletedStudent = (repo.findById(1001));
 		 repo.delete(toBeDeletedStudent.get());
 		 Optional<Student> deletedStudent = (repo.findById(1001));
-	     assertTrue(deletedStudent.isEmpty());
-	     
+	     assertTrue(deletedStudent.isEmpty());  
 	}
 	@Test
 	public void testDeleteStudent() {
-		 Optional<Student> toBeUpdatedStudent = Optional.of(repo.findByName("Raj"));
+		 Optional<Student> toBeUpdatedStudent = repo.findById(1001);
 		 System.out.println(toBeUpdatedStudent);
 	        toBeUpdatedStudent.get().setPer(100.00);
 	        repo.save(toBeUpdatedStudent.get());
-	        Optional<Student> updateStudent = Optional.of(repo.findByName("Raj"));
+	        Optional<Student> updateStudent = repo.findById(1001);
 	        assertEquals(100.00,updateStudent.get().getPer());
 	}
-	
-	
-	
-
 }

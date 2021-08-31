@@ -14,14 +14,6 @@ public class StudentService {
 	
 	@Autowired
 	private StudentRepo repo;
-	
-	public Student getStudentDetailsByName(String name) {
-		Student student=repo.findByName(name);
-		if(student==null)
-			throw new StudntNotFoundException();
-		else
-			return student;
-	}
 
 	public Student updateStudent(Integer id,Student student) {
 		Optional<Student> existingStudent=repo.findById(id);

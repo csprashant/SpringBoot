@@ -38,16 +38,11 @@ public class StudentServiceTest {
 		student=new Student(1,"Raj",95.24);	
 	}
 	
-	@Test
-	public void testGetStudentDetailsByName() {
-		Mockito.when(repo.findByName("Raj")).thenReturn(student);
-		assertThat(service.getStudentDetailsByName("Raj")).isEqualTo(student);
-	}
 	
 	@Test
-	public void  testGetStudentDetailsByNameWithException() throws Exception{
-		Mockito.when(repo.findByName(Mockito.anyString())).thenThrow(StudntNotFoundException.class);
-		assertThrows(StudntNotFoundException.class,()->service.getStudentDetailsByName("Raj2"));
+	public void  testGetStudentDetailsByIdWithException() throws Exception{
+		Mockito.when(repo.findById(Mockito.anyInt())).thenThrow(StudntNotFoundException.class);
+		assertThrows(StudntNotFoundException.class,()->service.getStudentDetailsById(1));
 	}
 	
 	@Test
