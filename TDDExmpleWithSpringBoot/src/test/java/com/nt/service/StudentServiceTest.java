@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.nt.dto.StudentDto;
-import com.nt.exception.StudntNotFoundException;
+import com.nt.exception.StudentNotFoundException;
 import com.nt.model.Student;
 import com.nt.repo.StudentRepo;
 
@@ -28,24 +28,18 @@ public class StudentServiceTest {
 	
 	@MockBean
 	private StudentRepo repo;
-	
-	private StudentDto student;
-	
-	@BeforeEach
-	public void setUp() {
-		student=new StudentDto(1,"Raj",95.24);	
-	}
+
 	
 	@Test
 	public void  testGetStudentDetailsByIdWithException() throws Exception{
-		Mockito.when(repo.findById(Mockito.anyInt())).thenThrow(StudntNotFoundException.class);
-		assertThrows(StudntNotFoundException.class,()->service.getStudentDetailsById(1));
+		Mockito.when(repo.findById(Mockito.anyInt())).thenThrow(StudentNotFoundException.class);
+		assertThrows(StudentNotFoundException.class,()->service.getStudentDetailsById(1));
 	}
 	
 	@Test
 	public void testsaveStduent() {
 		Mockito.when(repo.save(Mockito.any())).thenReturn(new Student(1,"Raj",85.25));
-		StudentDto sdto=service.saveStudent(new StudentDto(1,"Raj",85.25));
+		StudentDto sdto=service.saveStudent(new StudentDto(1,"Raj","85.25"));
 		assertEquals("Raj", sdto.getName());
 		
 	}
@@ -56,8 +50,6 @@ public class StudentServiceTest {
 		student.setId(102);
 		student.setName("OM");
 		Mockito.when(repo.save(Mockito.any())).thenReturn(student);
-		
-		
 		
 	}
 	
@@ -73,8 +65,8 @@ public class StudentServiceTest {
 	
 	@Test
 	public void  testGetAllRecordwithException() throws Exception{
-		Mockito.when(repo.findAll()).thenThrow(StudntNotFoundException.class);
-		assertThrows(StudntNotFoundException.class,()->service.getAllRecord());
+		Mockito.when(repo.findAll()).thenThrow(StudentNotFoundException.class);
+		assertThrows(StudentNotFoundException.class,()->service.getAllRecord());
 	}
 	
 	@Test 
@@ -91,17 +83,20 @@ public class StudentServiceTest {
 		Mockito.when(repo.findById(Mockito.anyInt())).thenReturn(Optional.of(student));
 		StudentDto sdto=service.getStudentDetailsById(1);
 		assertEquals(sdto.getName(), student.getName());
-		assertEquals(sdto.getPer(), student.getPer());
+		assertEquals(Double.parseDouble(sdto.getPer()), student.getPer());
 	}
 	
 	@Test
 	public void  testGetStudentDetailsByIdwithException() throws Exception{
-		Mockito.when(repo.findById(36)).thenThrow(StudntNotFoundException.class);
-		assertThrows(StudntNotFoundException.class,()->service.getStudentDetailsById(36));
+		Mockito.when(repo.findById(36)).thenThrow(StudentNotFoundException.class);
+		assertThrows(StudentNotFoundException.class,()->service.getStudentDetailsById(36));
 	}
 	
-	@AfterEach
-	public void clear() {
-		student=null;
+	@Test
+	public void testUpdateStudentWithException() {
+		Mockito.when(repo.findById(36)).thenThrow(StudentNotFoundException.class);
+		assertThrows(StudentNotFoundException.class,()->service.getStudentDetailsById(36));;
+		
 	}
+
 }

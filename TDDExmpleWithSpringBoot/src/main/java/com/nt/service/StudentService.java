@@ -3,12 +3,14 @@ package com.nt.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nt.convertor.StudentConvertor;
 import com.nt.dto.StudentDto;
-import com.nt.exception.StudntNotFoundException;
+import com.nt.exception.StudentNotFoundException;
 import com.nt.model.Student;
 import com.nt.repo.StudentRepo;
 
@@ -27,26 +29,22 @@ public class StudentService {
 			return new StudentConvertor().modelToDto(repo.save(existingStudent.get()));
 			}
 		else
-			 throw new StudntNotFoundException();
+			 throw new StudentNotFoundException("Student","ID",id);
 	}
 	
 	public StudentDto saveStudent(StudentDto studentDto) {
-		//Student student=new StudentConvertor().dtoToModel(studentDto);
-		Student student=new Student();
-		student.setId(studentDto.getId());
-		student.setName(studentDto.getName());
-		student.setPer(studentDto.getPer());
-		
+		Student student=new StudentConvertor().dtoToModel(studentDto);
+		Random random = new Random();  
+		student.setId(random.nextInt(10000));
 		return new StudentConvertor().modelToDto( repo.save(student));
 	}
 
 	public StudentDto getStudentDetailsById(Integer id) {
 		var student=repo.findById(id);
-		if(student.isPresent()) {
+		if(student.isPresent()) 
 			return new StudentConvertor().modelToDto( student.get());
-			}
 		else 
-			throw new StudntNotFoundException();
+			throw new StudentNotFoundException("Student","Id",id);
 	}
 
 	public List<Student> getAllRecord() {
@@ -54,7 +52,7 @@ public class StudentService {
 		if(listStudent.size()>0)
 			return listStudent;
 		else
-			throw new StudntNotFoundException();
+			throw new StudentNotFoundException("!!!Sorry no records");
 	}
 
 	public String deleteStudentById(int id) {
@@ -64,6 +62,6 @@ public class StudentService {
 			return "Record deleted";
 		}
 		else 
-			throw new StudntNotFoundException();
+			throw new StudentNotFoundException("Student","Id",id);
 	}
 }

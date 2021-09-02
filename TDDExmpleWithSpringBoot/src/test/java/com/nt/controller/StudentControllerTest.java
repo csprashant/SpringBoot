@@ -18,11 +18,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nt.dto.StudentDto;
-import com.nt.exception.StudntNotFoundException;
+import com.nt.exception.StudentNotFoundException;
 import com.nt.model.Student;
 import com.nt.service.StudentService;
 
@@ -39,7 +40,7 @@ public class StudentControllerTest {
 	
 	@BeforeEach
 	public void setUp() {
-		studentDto=new StudentDto(1,"Raj",95.24);	
+		studentDto=new StudentDto(1,"Raj","95.24");	
 	}
 	
 	
@@ -58,7 +59,7 @@ public class StudentControllerTest {
 	
 	@Test
 	public void  StudentNotFoundHttpStatus() throws Exception{
-		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willThrow(new StudntNotFoundException());
+		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willThrow(new StudentNotFoundException("Student not found"));
 		mockMvc.perform(MockMvcRequestBuilders.get("/students/12"))
 		.andExpect(status().isNotFound());
 	}
@@ -80,7 +81,7 @@ public class StudentControllerTest {
 		studentDto.setName("Raj sinha");
 		 BDDMockito.given(studentService.updateStudent(Mockito.anyInt(),Mockito.any())).willReturn(studentDto);
 	     mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
-	        			.content(new ObjectMapper().writeValueAsString(new Student(1, "Raj",96.36)))
+	        			.content(new ObjectMapper().writeValueAsString(new StudentDto(1, "Raj","96.36")))
 	        			.contentType(MediaType.APPLICATION_JSON)
 	        			.accept(MediaType.APPLICATION_JSON))
 	                	.andExpect(status().isOk())
@@ -103,13 +104,61 @@ public class StudentControllerTest {
 		
 	}
 	@Test
-	public void deleteStudentByIdTest() throws Exception{
+	public void testDeleteStudentByIdTest() throws Exception{
 		BDDMockito.given(studentService.deleteStudentById(Mockito.anyInt())).willReturn("Success");
 		mockMvc.perform(MockMvcRequestBuilders.delete("/students/1")
 						.contentType(MediaType.APPLICATION_JSON))
 						.andExpect(status().isOk())
 						.andDo(print());	
 	}
+	
+	@Test
+	public void testSaveStudentWithException() throws Exception{
+		studentDto=new StudentDto();	
+		studentDto.setId(1);
+		mockMvc.perform(MockMvcRequestBuilders.post("/students/")
+						.content(new ObjectMapper().writeValueAsString(studentDto))
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON))
+						.andExpect(status().isBadRequest())
+						.andDo(print());
+	}
+	
+	@Test
+	public void testUpdateStudentWithException() throws Exception{
+		studentDto=new StudentDto();	
+		studentDto.setId(1);
+		 BDDMockito.given(studentService.updateStudent(Mockito.anyInt(),Mockito.any())).willThrow(new StudentNotFoundException("Student not found"));
+	     mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
+	        			.content(new ObjectMapper().writeValueAsString(new StudentDto(1, "","")))
+	        			.contentType(MediaType.APPLICATION_JSON)
+	        			.accept(MediaType.APPLICATION_JSON))
+	                	.andExpect(status().isBadRequest());	                	
+	                	
+	}
+	
+	@Test
+	public void testDeleteStudentByIdWithException() throws Exception{
+		BDDMockito.given(studentService.deleteStudentById(Mockito.anyInt())).willThrow(new StudentNotFoundException("Student not found"));
+		mockMvc.perform(MockMvcRequestBuilders.delete("/students/195")
+						.contentType(MediaType.APPLICATION_JSON))
+						.andExpect(status().isNotFound());					
+	}
+	
+	@Test
+	public void testGetStudentDetailsByIDwithException() throws Exception{
+		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willThrow(new StudentNotFoundException("Student not found"));
+		mockMvc.perform(MockMvcRequestBuilders.get("/students/1"))
+						.andExpect(status().isNotFound());		
+	}
+	
+	@Test
+	public void getAllStudentTestWithException() throws Exception {
+		BDDMockito.given(studentService.getAllRecord()).willThrow(new StudentNotFoundException("!!!Sorry no record"));
+		mockMvc.perform(MockMvcRequestBuilders.get("/students/"))
+		                .andExpect(status().isNotFound());	
+	}	
+	
 	@AfterEach
 	public void clear() {
 		studentDto=null;
