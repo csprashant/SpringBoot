@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nt.dto.StudentDto;
 import com.nt.model.Student;
 import com.nt.service.StudentService;
 
@@ -24,9 +24,8 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 	
-	
 	@GetMapping("/{id}")
-	public ResponseEntity<Student> getStudentDetailsById(@PathVariable Integer id) throws Exception{
+	public ResponseEntity<StudentDto> getStudentDetailsById(@PathVariable Integer id) throws Exception{
 		return new ResponseEntity<>(studentService.getStudentDetailsById(id),HttpStatus.OK);
 	}
 	@GetMapping("/")
@@ -35,8 +34,8 @@ public class StudentController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Student> updateStudent(@PathVariable Integer id,  @RequestBody Student student){
-		return new ResponseEntity<Student>(studentService.updateStudent(id,student),HttpStatus.OK);
+	public ResponseEntity<StudentDto> updateStudent(@PathVariable Integer id,  @RequestBody StudentDto studentDto){
+		return new ResponseEntity<>(studentService.updateStudent(id,studentDto),HttpStatus.OK);
 	}
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteStudentById(@PathVariable Integer id)
@@ -44,8 +43,8 @@ public class StudentController {
 		return  new ResponseEntity<String>(studentService.deleteStudentById(id),HttpStatus.OK);
 	}
 	@PostMapping("/")
-	public ResponseEntity<Student> saveStudent(@RequestBody Student student){
-	return new ResponseEntity<Student>(studentService.saveStudent(student),HttpStatus.CREATED);	
+	public ResponseEntity<StudentDto> saveStudent(@RequestBody StudentDto studentDto){
+	return new ResponseEntity<>(studentService.saveStudent(studentDto),HttpStatus.CREATED);	
 	}
 	
 }

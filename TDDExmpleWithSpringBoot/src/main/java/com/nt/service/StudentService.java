@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.nt.convertor.StudentConvertor;
+import com.nt.dto.StudentDto;
 import com.nt.exception.StudntNotFoundException;
 import com.nt.model.Student;
 import com.nt.repo.StudentRepo;
@@ -15,25 +18,33 @@ public class StudentService {
 	@Autowired
 	private StudentRepo repo;
 
-	public Student updateStudent(Integer id,Student student) {
+	public StudentDto updateStudent(Integer id,StudentDto studentDto) {
 		Optional<Student> existingStudent=repo.findById(id);
+		Student student=new StudentConvertor().dtoToModel(studentDto);
 		if(existingStudent.isPresent()) {
 			existingStudent.get().setName(student.getName());
 			existingStudent.get().setPer(student.getPer());
-			return repo.save(existingStudent.get());
+			return new StudentConvertor().modelToDto(repo.save(existingStudent.get()));
 			}
 		else
 			 throw new StudntNotFoundException();
 	}
 	
-	public Student saveStudent(Student student) {
-		return repo.save(student);
+	public StudentDto saveStudent(StudentDto studentDto) {
+		//Student student=new StudentConvertor().dtoToModel(studentDto);
+		Student student=new Student();
+		student.setId(studentDto.getId());
+		student.setName(studentDto.getName());
+		student.setPer(studentDto.getPer());
+		
+		return new StudentConvertor().modelToDto( repo.save(student));
 	}
 
-	public Student getStudentDetailsById(Integer id) {
+	public StudentDto getStudentDetailsById(Integer id) {
 		var student=repo.findById(id);
-		if(student.isPresent())
-			return student.get();
+		if(student.isPresent()) {
+			return new StudentConvertor().modelToDto( student.get());
+			}
 		else 
 			throw new StudntNotFoundException();
 	}

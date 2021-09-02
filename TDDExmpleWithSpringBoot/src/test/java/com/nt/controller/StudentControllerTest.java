@@ -3,6 +3,7 @@ package com.nt.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nt.dto.StudentDto;
 import com.nt.exception.StudntNotFoundException;
 import com.nt.model.Student;
 import com.nt.service.StudentService;
@@ -32,17 +35,17 @@ public class StudentControllerTest {
 	@MockBean
 	private StudentService studentService;
 	
-	private Student student;
+	private StudentDto studentDto;
 	
 	@BeforeEach
 	public void setUp() {
-		student=new Student(1,"Raj",95.24);	
+		studentDto=new StudentDto(1,"Raj",95.24);	
 	}
 	
 	
 	@Test
 	public void getStudentDetailsByIDTest() throws Exception{
-		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willReturn(student);
+		BDDMockito.given(studentService.getStudentDetailsById(Mockito.anyInt())).willReturn(studentDto);
 		//mockMvc.perform(MockMvcRequestBuilders.get("/students/id").param("id", "1"))
 		// why param becuase all request mapping in controler class  ("students/{id}") are similer so it confunsed to pick which handler mehtod it should pick so
 		//we have go for @RequestParam in the controller class mehtod 
@@ -63,9 +66,9 @@ public class StudentControllerTest {
 	@Test
 	public void testSaveStduent() throws Exception{
 	
-		BDDMockito.given(studentService.saveStudent(Mockito.any())).willReturn(student);
+		BDDMockito.given(studentService.saveStudent(Mockito.any())).willReturn(studentDto);
 		mockMvc.perform(MockMvcRequestBuilders.post("/students/")
-						.content(new ObjectMapper().writeValueAsString(student))
+						.content(new ObjectMapper().writeValueAsString(studentDto))
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 						.andExpect(status().isCreated())
@@ -74,8 +77,8 @@ public class StudentControllerTest {
 	}
 	@Test
 	public void updateStudentTest() throws Exception{
-		 student.setName("Raj sinha");
-		 BDDMockito.given(studentService.updateStudent(Mockito.anyInt(),Mockito.any())).willReturn(student);
+		studentDto.setName("Raj sinha");
+		 BDDMockito.given(studentService.updateStudent(Mockito.anyInt(),Mockito.any())).willReturn(studentDto);
 	     mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
 	        			.content(new ObjectMapper().writeValueAsString(new Student(1, "Raj",96.36)))
 	        			.contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +112,7 @@ public class StudentControllerTest {
 	}
 	@AfterEach
 	public void clear() {
-		student=null;
+		studentDto=null;
 	}
 }
 
