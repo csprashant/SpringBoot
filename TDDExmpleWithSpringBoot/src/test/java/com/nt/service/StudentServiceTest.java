@@ -41,7 +41,6 @@ public class StudentServiceTest {
 		Mockito.when(repo.save(Mockito.any())).thenReturn(new Student(1,"Raj",85.25));
 		StudentDto sdto=service.saveStudent(new StudentDto(1,"Raj","85.25"));
 		assertEquals("Raj", sdto.getName());
-		
 	}
 		
 	@Test

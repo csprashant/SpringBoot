@@ -3,7 +3,6 @@ package com.nt.dto;
 import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
