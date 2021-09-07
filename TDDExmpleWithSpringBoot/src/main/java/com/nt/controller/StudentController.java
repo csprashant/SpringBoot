@@ -27,26 +27,56 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 	
+	/**
+	 * Endpoint for displaying single student details
+	 * 
+	 * @param id  represents the unique id
+	 * @return ResponseEntity having Student details
+	 * @throws Exception
+	 */
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<StudentDto> getStudentDetailsById(@PathVariable Integer id) throws Exception{
 		return new ResponseEntity<>(studentService.getStudentDetailsById(id),HttpStatus.OK);			
 	}
+	
+	/** 
+	 *  Endpoint for displaying all students details 
+	 * @return ResponseEntity having All Student details
+	 */
 	
 	@GetMapping("/")
 	public ResponseEntity<List<Student>> getAllStudents(){
 		return new ResponseEntity<List<Student>>(studentService.getAllRecord(),HttpStatus.OK);
 	}
 	
+	/**
+	 * 	Endpoint for updating Student details
+	 * @param id	represents the unique id
+	 * @param studentDto represents modified StudentDto Object
+	 * @return ResponseEntity having updated Student details
+	 */
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<StudentDto> updateStudent(@PathVariable Integer id,  @Valid @RequestBody StudentDto studentDto){
 		return new ResponseEntity<>(studentService.updateStudent(id,studentDto),HttpStatus.OK);
 	}
 	
+	/**
+	 * Endpoint for deleting Student details
+	 * @param id	represents the unique id
+	 * @return	String with success message
+	 */
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteStudentById(@PathVariable Integer id){
 		return  new ResponseEntity<String>(studentService.deleteStudentById(id),HttpStatus.OK);
 	}
-	
+	/**
+	 * Endpoint for saving new Student 
+	 * @param studentDto represents StudentDto Object to persist
+	 * @return  ResponseEntity having saved Student details
+	 */
 	@PostMapping("/")
 	public ResponseEntity<StudentDto> saveStudent(@Valid @RequestBody StudentDto studentDto){
 			return new ResponseEntity<>(studentService.saveStudent(studentDto),HttpStatus.CREATED);	

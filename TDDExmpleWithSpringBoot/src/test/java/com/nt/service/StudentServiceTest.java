@@ -34,6 +34,7 @@ public class StudentServiceTest {
 	public void  testGetStudentDetailsByIdWithException() throws Exception{
 		Mockito.when(repo.findById(Mockito.anyInt())).thenThrow(StudentNotFoundException.class);
 		assertThrows(StudentNotFoundException.class,()->service.getStudentDetailsById(1));
+		
 	}
 	
 	@Test
