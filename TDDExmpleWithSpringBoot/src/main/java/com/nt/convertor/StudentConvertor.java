@@ -10,6 +10,7 @@ import com.nt.model.Student;
 
 
 
+
 public class StudentConvertor {
 	public StudentDto modelToDto(Student student) {
 		return new ModelMapper().map(student, StudentDto.class);

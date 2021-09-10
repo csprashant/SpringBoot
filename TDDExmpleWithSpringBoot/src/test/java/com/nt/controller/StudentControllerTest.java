@@ -1,5 +1,7 @@
 package com.nt.controller;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,14 +14,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nt.dto.StudentDto;
@@ -27,10 +34,13 @@ import com.nt.exception.StudentNotFoundException;
 import com.nt.model.Student;
 import com.nt.service.StudentService;
 
-@ExtendWith(SpringExtension.class)
+
+
+@ExtendWith({ RestDocumentationExtension.class,SpringExtension.class})
 @WebMvcTest(controllers = StudentController.class)
+@AutoConfigureRestDocs(outputDir ="target/generated-snippet" )
 public class StudentControllerTest {
-	@Autowired
+
 	private MockMvc mockMvc;
 	
 	@MockBean
@@ -39,7 +49,8 @@ public class StudentControllerTest {
 	private StudentDto studentDto;
 	
 	@BeforeEach
-	public void setUp() {
+	public void setUp(WebApplicationContext webApplicationContext,RestDocumentationContextProvider restDocumentationContextProvider) {
+		this.mockMvc=MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(documentationConfiguration(restDocumentationContextProvider)).build();
 		studentDto=new StudentDto(1,"Raj","95.24");	
 	}
 	
@@ -68,13 +79,14 @@ public class StudentControllerTest {
 	public void testSaveStduent() throws Exception{
 	
 		BDDMockito.given(studentService.saveStudent(Mockito.any())).willReturn(studentDto);
+		String jsonString=new ObjectMapper().writeValueAsString(studentDto);
 		mockMvc.perform(MockMvcRequestBuilders.post("/students/")
-						.content(new ObjectMapper().writeValueAsString(studentDto))
-						.contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON))
+						.content(jsonString)
+						.accept("application/json")
+						.contentType("application/json")).andDo(print())
 						.andExpect(status().isCreated())
-						.andExpect(jsonPath("$").isMap())
-						.andDo(print());
+						.andExpect(MockMvcResultMatchers.content().json(jsonString))
+						.andDo(document("{methodName}",Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),Preprocessors.preprocessResponse(Preprocessors.prettyPrint())));
 	}
 	@Test
 	public void updateStudentTest() throws Exception{
@@ -82,11 +94,11 @@ public class StudentControllerTest {
 		 BDDMockito.given(studentService.updateStudent(Mockito.anyInt(),Mockito.any())).willReturn(studentDto);
 	     mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
 	        			.content(new ObjectMapper().writeValueAsString(new StudentDto(1, "Raj","96.36")))
-	        			.contentType(MediaType.APPLICATION_JSON)
-	        			.accept(MediaType.APPLICATION_JSON))
+	        			.contentType("application/json")
+	        			.accept("application/json")).andDo(print())
 	                	.andExpect(status().isOk())
 	                	.andExpect(jsonPath("$").isMap())
-	                	.andDo(print());
+	                	.andDo(document("{methodName}",Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),Preprocessors.preprocessResponse(Preprocessors.prettyPrint())));
 	    }
 	
 	@Test
